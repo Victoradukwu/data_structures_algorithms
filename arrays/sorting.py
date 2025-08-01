@@ -49,24 +49,33 @@ def selection_sort(arr):
 
 def insertion_sort(arr):
     """
+    This is a STABLE sorting algorithm with a O(n**2)
+    
     This sorting algorithm divides the array into two: sorted (initially empty) and unsorted. It loops though the unsorted array. Takes one element at a time, determines it right position in the sorted array and inserts it there to mainttain the sorting order
     
     1. Start with the first item and add it to the sorted array
     2. Pick the next item. loop through the sorted array, determine where it fits and insert it there
     3. Repeat step two until the unsorted array is exhausted
     """
-    
-    array_length = len(arr)
-    for i in range(1, array_length):
-        curr_val = arr[i]
-        insert_index = i
-        for j in range(i):
-            if curr_val < arr[j]:
-                insert_index = j
-                break
-        if insert_index != i:
-            arr.insert(insert_index, arr.pop(i))
+    arr_length = len(arr)
+    for i in range(arr_length):
+        j = i - 1
+        while arr[j] > arr[j + 1] and j >= 0:
+            arr[j], arr[j + 1] = arr[j + 1], arr[j]
+            j -= 1
     return arr
+
+    # array_length = len(arr)
+    # for i in range(1, array_length):
+    #     curr_val = arr[i]
+    #     insert_index = i
+    #     for j in range(i):
+    #         if curr_val < arr[j]:
+    #             insert_index = j
+    #             break
+    #     if insert_index != i:
+    #         arr.insert(insert_index, arr.pop(i))
+    # return arr
 
 
 def quick_sort(arr, low=0, high=None):
