@@ -101,7 +101,11 @@ def quick_sort(arr, low=0, high=None):
     return arr
 
 
-def merge_soft(arr):
+def merge_sort(arr):
+    """Has a time complexity of O(nlogn) and it is a stable algorithm, used by most programming languages
+    Note that logn is more efficiant than n, hence nlogn is more efficient than n**2
+
+    """
     if len(arr)<=1:
         return arr
     
@@ -125,8 +129,8 @@ def merge_soft(arr):
     left_half = arr[:mid]
     right_half = arr[mid:]
     
-    sorted_left = merge_soft(left_half)
-    sorted_right = merge_soft(right_half)
+    sorted_left = merge_sort(left_half)
+    sorted_right = merge_sort(right_half)
     
     return merge(sorted_left, sorted_right)
     
@@ -147,5 +151,5 @@ print('original: ', int_lst, str_lst)
 # print(f'Quick sort: {quick_sort(int_lst)}')
 # print(f'Quick sort: {quick_sort(str_lst)}')
 
-print(f'Merge sort: {merge_soft(int_lst)}')
-print(f'Merge sort: {merge_soft(str_lst)}')
+print(f'Merge sort: {merge_sort(int_lst)}')
+print(f'Merge sort: {merge_sort(str_lst)}')
