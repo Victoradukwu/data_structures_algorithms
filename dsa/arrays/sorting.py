@@ -79,6 +79,13 @@ def insertion_sort(arr):
 
 
 def quick_sort(arr, low=0, high=None):
+    """_summary_
+    Worst case Time complexity of O(n**2), but average case time complexity of O(nlogn)
+    The worst case space complexity is O(n)
+    Quicksort is generally considered as a non-stable algorithm
+
+    The idea behind quicksort is to pick an index, which is called the pivot. We then partition the array such that every value to the left is less than or equal to the pivot and every value to the right is greater than the pivot.
+    """
     def partition(array:List[Any], low:int, high:int)->int:
         i = low - 1
         pivot = array[high]
@@ -88,7 +95,7 @@ def quick_sort(arr, low=0, high=None):
                 array[i], array[j] = array[j], array[i]
         i += 1
         array[i], array[high] = array[high], array[i]
-        
+
         return i
     
     if high is None:
@@ -104,7 +111,6 @@ def quick_sort(arr, low=0, high=None):
 def merge_sort(arr):
     """Has a time complexity of O(nlogn) and it is a stable algorithm, used by most programming languages
     Note that logn is more efficiant than n, hence nlogn is more efficient than n**2
-
     """
     if len(arr)<=1:
         return arr

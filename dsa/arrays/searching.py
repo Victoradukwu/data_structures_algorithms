@@ -4,6 +4,7 @@ array = arr = [3, 7, 2, 9, 5]
 
 
 def linear_search(arr: List[Any], search_term:Any)->int:
+    """Time complexity of O(n)"""
     for i in range(len(arr)):
         if arr[i] == search_term:
             return i
@@ -11,6 +12,10 @@ def linear_search(arr: List[Any], search_term:Any)->int:
 
 
 def binary_search(arr: List[Any], search_term: Any)->int:
+    """
+    Time complexity of O(logn) but requires that the the array is already sorted
+    So the effective time complexity is the that of the sorting algorithm
+    """
     low = 0
     high = len(arr)-1
     
