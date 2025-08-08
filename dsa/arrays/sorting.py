@@ -140,7 +140,33 @@ def merge_sort(arr):
     
     return merge(sorted_left, sorted_right)
     
-    
+
+def bucket_sort(arr):
+    """
+    Bucket sort has the best big O complexity but it is rarely used bue to it's constraints: it can only be used if we already know the range of possible values of the elements of the array. It has a worst case complexity of O(n)
+    Increased memory requirements, as each buck needs extra space.
+
+    Works well if the data distribution is (roughly) uniform; skewed data causes overloaded bucket, which leads to decrease in performance
+
+    requires care in chosing number of buckets: two many buckets==>high memory requirement; too few buckets==>slow internal sort. Common choices are are `n` and ` √n
+
+    A difficulty with bucket sort is that data data must be mappable to bucket index. This is not a problem for numbers but quite tricky for string and other complex objects
+
+    Space complexity of O(n + K), where n is the array length and k is the number of buskets
+    """
+    counts = [0] * len(set(arr))
+
+    # Count the quantity of each val in arr
+    for n in arr:
+        counts[n] += 1
+
+    # Fill each bucket in the original array
+    i = 0
+    for n in range(len(counts)):
+        for j in range(counts[n]):
+            arr[i] = n
+            i += 1
+    return arr
     
 
                 
@@ -157,5 +183,7 @@ print('original: ', int_lst, str_lst)
 # print(f'Quick sort: {quick_sort(int_lst)}')
 # print(f'Quick sort: {quick_sort(str_lst)}')
 
-print(f'Merge sort: {merge_sort(int_lst)}')
-print(f'Merge sort: {merge_sort(str_lst)}')
+# print(f'Merge sort: {merge_sort(int_lst)}')
+# print(f'Merge sort: {merge_sort(str_lst)}')
+
+print(f"Bucket sort: {bucket_sort(int_lst)}")
