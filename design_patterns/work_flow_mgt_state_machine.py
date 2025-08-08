@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, Self
 
 
 class Event:
@@ -15,7 +15,7 @@ class State(ABC):
     """Base class for all types of States"""
 
     @abstractmethod
-    def handle_event(self, event: Event)->Optional["State"]:
+    def handle_event(self, event: Event)->Optional[Self]:
         pass
 
     def __eq__(self, other):
