@@ -60,7 +60,7 @@ def insertion_sort(arr):
     arr_length = len(arr)
     for i in range(arr_length):
         j = i - 1
-        while arr[j] > arr[j + 1] and j >= 0:
+        while arr[j] > arr[j + 1] and j >= 0: # Loop will be skipped for the first element, since the condition j >= 0 evaluates to False
             arr[j], arr[j + 1] = arr[j + 1], arr[j]
             j -= 1
     return arr
@@ -80,6 +80,8 @@ def insertion_sort(arr):
 
 def quick_sort(arr, low=0, high=None):
     """_summary_
+    Quite similar to merre sort
+    
     Worst case Time complexity of O(n**2), but average case time complexity of O(nlogn)
     The worst case space complexity is O(n)
     Quicksort is generally considered as a non-stable algorithm
@@ -111,6 +113,7 @@ def quick_sort(arr, low=0, high=None):
 def merge_sort(arr):
     """Has a time complexity of O(nlogn) and it is a stable algorithm, used by most programming languages
     Note that logn is more efficiant than n, hence nlogn is more efficient than n**2
+    Uses recursion
     """
     if len(arr)<=1:
         return arr
@@ -186,4 +189,4 @@ print('original: ', int_lst, str_lst)
 # print(f'Merge sort: {merge_sort(int_lst)}')
 # print(f'Merge sort: {merge_sort(str_lst)}')
 
-print(f"Bucket sort: {bucket_sort(int_lst)}")
+# print(f"Bucket sort: {bucket_sort(int_lst)}")
