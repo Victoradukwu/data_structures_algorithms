@@ -89,6 +89,80 @@ class UniquePaths:
         return prev_row[0]
 
 
+class ClimbingStairs:
+    """_Neetcode_Easy_
+
+    You are climbing a staircase. It takes n steps to reach the top.
+    Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+    """
+
+    def vanillaRecursion(self, n: int) -> int:
+        """
+        This approach uses the vanilla recursion method. It is highly inefficient
+
+        Time complexit: O(2^n)
+        Space complexity: O(n)
+        """
+
+        def dfs(i):
+            """Depth first search"""
+            if i >= n:
+                return i == n  # if i == n, return 1, otherwise return 0
+            res = dfs(i + 1) + dfs(i + 2)
+            return res
+
+        return dfs(0)
+
+    def memoizedRecursion(self, n: int) -> int:
+        """Uses recursion with memoization, aka top-down dynamic programming. An improvement over the vanilla recursion
+
+        Time complexit: O(n)
+        Space complexity: O(n)
+        """
+        cache = [-1] * n
+
+        def dfs(i):
+            if i >= n:
+                return i == n  # if i == n, return 1, otherwise return 0
+            if cache[i] == -1:
+                cache[i] = dfs(i + 1) + dfs(i + 2)
+            return cache[i]
+
+        return dfs(0)
+
+    def dynamic_programming(self, n: int) -> int:
+        """Use Bottom-up dynamic programming, aka True DP.
+
+        Time complexit: O(n)
+        Space complexity: O(n)
+        """
+        if n <= 2:
+            return n
+        
+        dp = [0] * (n + 1)
+        dp[1], dp[2] = 1, 2
+        for i in range(3, n + 1):
+            dp[i] = dp[i - 1] + dp[i - 2]
+        return dp[n]
+
+    def dp_space_optimized(self, n: int) -> int:
+        """Uses Bottom-up DP with space optimization
+
+        Time complexit: O(n)
+        Space complexity: O(1)
+        """
+        one, two = 1, 1
+
+        for _ in range(n - 1):
+            # temp = one
+            # one = one + two
+            # two = temp
+            
+            one, two = one + two, one
+
+        return one
+
+
 n = 10
 fb = Fibonacci()
 print(fb.fibonacci_memoized(n))
