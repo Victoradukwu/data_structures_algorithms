@@ -1,5 +1,5 @@
 
-from typing import Optional
+from typing import List, Optional
 
 
 class ListNode:
@@ -46,6 +46,27 @@ class ReverseLinkedList:
         return new_head
 
     
+def mergeKLists(lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+    """_Neetcode_hard_
+
+    You are given an array of k linked-lists lists, each linked-list is sorted in ascending order.
+    Merge all the linked-lists into one sorted linked-list and return it.
+    """
+    nodes = []
+    for lst in lists:
+        while lst:
+            nodes.append(lst.val)
+            lst = lst.next
+    nodes.sort()
+
+    res = ListNode(0)
+    cur = res
+    for node in nodes:
+        cur.next = ListNode(node)
+        cur = cur.next
+    return res.next
+
+
 def mergeTwoLists(list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
     """_Neetcode_Easy_
 

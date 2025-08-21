@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, List, Optional
 
 int_lst = [5, 2, 9, 1, 5, 6]
 str_lst = ["banana", "date", "apple", "cherry", "Dated"]
@@ -65,22 +65,10 @@ def insertion_sort(arr):
             j -= 1
     return arr
 
-    # array_length = len(arr)
-    # for i in range(1, array_length):
-    #     curr_val = arr[i]
-    #     insert_index = i
-    #     for j in range(i):
-    #         if curr_val < arr[j]:
-    #             insert_index = j
-    #             break
-    #     if insert_index != i:
-    #         arr.insert(insert_index, arr.pop(i))
-    # return arr
-
 
 def quick_sort(arr, low=0, high=None):
     """_summary_
-    Quite similar to merre sort
+    Quite similar to merge sort
     
     Worst case Time complexity of O(n**2), but average case time complexity of O(nlogn)
     The worst case space complexity is O(n)
@@ -88,25 +76,27 @@ def quick_sort(arr, low=0, high=None):
 
     The idea behind quicksort is to pick an index, which is called the pivot. We then partition the array such that every value to the left is less than or equal to the pivot and every value to the right is greater than the pivot.
     """
-    def partition(array:List[Any], low:int, high:int)->int:
-        i = low - 1
-        pivot = array[high]
-        for j in range(low, high):
-            if array[j] <= pivot:
-                i += 1
-                array[i], array[j] = array[j], array[i]
-        i += 1
-        array[i], array[high] = array[high], array[i]
-
-        return i
-    
-    if high is None:
+    if not high:
         high = len(arr) - 1
-    
-    if low < high:
-        idx = partition(arr, low, high)
-        quick_sort(arr, low=low, high=idx-1)
-        quick_sort(arr, low=idx+1, high=high)
+
+    if high <= low:
+        return arr
+
+    pivot = arr[high]
+    left = low  # pointer for left side
+
+    # Partition: elements smaller than pivot on left side
+    for i in range(low, high):
+        if arr[i] < pivot:
+            arr[i], arr[left] = arr[left], arr[i]
+            left += 1
+
+    # Move pivot in-between left & right sides
+    arr[left], arr[high] = arr[high], arr[left]
+
+    quick_sort(arr, low, left - 1)  # Quick sort left side
+    quick_sort(arr, left + 1, high)  # Quick sort right side
+
     return arr
 
 
@@ -121,7 +111,7 @@ def merge_sort(arr):
     def merge(left_half, right_half):
         result = []
         
-        i = j = 0
+        i = j = 0 #Using two pointers; i loops the left half and j loops thru the right half
         while i < len(left_half) and j < len(right_half):
             if left_half[i] < right_half[j]:
                 result.append(left_half[i])
@@ -183,8 +173,8 @@ print('original: ', int_lst, str_lst)
 # print(f'Insertion sort: {insertion_sort(int_lst)}')
 # print(f'Insertion sort: {insertion_sort(str_lst)}')
 
-# print(f'Quick sort: {quick_sort(int_lst)}')
-# print(f'Quick sort: {quick_sort(str_lst)}')
+print(f'Quick sort: {quick_sort(int_lst)}')
+print(f'Quick sort: {quick_sort(str_lst)}')
 
 # print(f'Merge sort: {merge_sort(int_lst)}')
 # print(f'Merge sort: {merge_sort(str_lst)}')
