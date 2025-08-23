@@ -124,3 +124,68 @@ def minEatingSpeed(self, piles: List[int], h: int) -> int:
             highest = mid - 1
             result = mid
     return result
+
+
+class Search2DMatrix:
+    """_Neetcode_Medium_
+
+    You are given an m x n 2-D integer array matrix and an integer target.
+    Each row in matrix is sorted in non-decreasing order.
+    The first integer of every row is greater than the last integer of the previous row.
+    Return true if target exists within matrix or false otherwise.
+    """
+    def brute_force(self, matrix: List[List[int]], target: int) -> bool:
+        """
+        Compare each element with the target. Not very efficient
+        Time Complexity: O(m*n)
+        Space Complexity: O(1)
+        """
+        m, n = len(matrix), len(matrix[0])
+        for i in range(m):
+            for j in range(n):
+                if matrix[i][j] == target:
+                    return True
+        return False
+    
+    def staircase_search(self, matrix: List[List[int]], target: int) -> bool:
+        """
+        Takes advantage of the fact that the matrix is sorted along both the rows and the columns. Similar to bunary sort for a 1-D array
+        Compare the target with the last element in the first row. If the element is greater than the
+        target, remain on that row and check the lower column of that row. More efficient.
+        
+        Time complexity: O(m + n)
+        Space complexity: O(1)
+        """
+        m, n = len(matrix), len(matrix[0])
+        r, c = 0, n - 1
+
+        while r < m and c >= 0:
+            if matrix[r][c] > target:
+                c -= 1
+            elif matrix[r][c] < target:
+                r += 1
+            else:
+                return True
+        return False
+    
+    def binary_search(self, matrix: List[List[int]], target: int) -> bool:
+        """
+        Takes advantage of the fact that the matrix is sorted along both the rows and the columns. Considers the entire
+        matrix as a `flattened 1-D array` and applies the true binary search. Even more efficient
+
+        Time complexity: Olog(m * n)
+        Space complexity: O(1)
+        """
+        ROWS, COLS = len(matrix), len(matrix[0])
+
+        l, r = 0, ROWS * COLS - 1
+        while l <= r:
+            mid = l + (r - l) // 2
+            row, col = mid // COLS, mid % COLS
+            if target > matrix[row][col]:
+                l = mid + 1
+            elif target < matrix[row][col]:
+                r = mid - 1
+            else:
+                return True
+        return False
