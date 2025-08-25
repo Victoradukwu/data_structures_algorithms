@@ -54,14 +54,19 @@ class BinarySearchTree:
         return curr
     
     def delete_node(self, root: Optional[TreeNode], val)->Optional[TreeNode]:
+        """_summary_
+        Find the node is O(logn) and removing it is log(n) ie 2log(n). But 2 is a constant
+        Therefore thr time complexity is O(logn)
+
+        """
         if not root:
             return root
-        
-        if val > root.val:
+
+        if val > root.val:  # We have not found it yet
             root.right = self.delete_node(root.right, val)
-        elif val < root.val:
+        elif val < root.val:  # We have not found it yet
             root.left = self.delete_node(root.left, val)
-        else:
+        else:  # We have found it
             if not root.left:
                 return root.right
             elif not root.right:
@@ -69,13 +74,13 @@ class BinarySearchTree:
             else:
                 min_node = self.min_value_node(root.right)
                 root.val = min_node.val  # type: ignore
-                root.right = self.delete_node(root.right, min_node.val) # type: ignore
+                root.right = self.delete_node(root.right, min_node.val)  # type: ignore
         return root
-    
-    def inorder_traversal(self, root: Optional[TreeNode])->List[int]:
+
+    def dfs_inorder_traversal(self, root: Optional[TreeNode]) -> List[int]:
         """_Neetcode_Easy_
 
-        Before picking a node, we traverse its left subtree first. Then we pick the node and then traverse the right subtree. This is done recursivey and a a time complexity of O(n).
+        DFS: Before picking a node, we traverse its left subtree first. Then we pick the node and then traverse the right subtree. This is done recursivey and a a time complexity of O(n).
         If we have an unsorted array, we will have to construct a valid BST before traversing. This will lead to a combined O(nlogn)
         """
         res = []
@@ -91,10 +96,10 @@ class BinarySearchTree:
         inorder(root)
         return res
 
-    def preorder_traversal(self, root: Optional[TreeNode]) -> List[int]:
+    def dfs_preorder_traversal(self, root: Optional[TreeNode]) -> List[int]:
         """_Bonus_
 
-        We print a node, traverse the left subtree, then traverse the right subtree. This is called
+        DFS: We print a node, traverse the left subtree, then traverse the right subtree. This is called
         PREORDER traversal
         """
         res = []
@@ -109,11 +114,11 @@ class BinarySearchTree:
 
         preorder(root)
         return res
-    
-    def postorder_traversal(self, root: Optional[TreeNode]) -> List[int]:
+
+    def dfs_postorder_traversal(self, root: Optional[TreeNode]) -> List[int]:
         """_Bonus_
 
-        We traverse the left subtree, then traverse the right subtree, then print the root. This is called
+        DFS: We traverse the left subtree, then traverse the right subtree, then print the root. This is called
         POSTORDER traversal
         """
         res = []
@@ -128,13 +133,13 @@ class BinarySearchTree:
 
         postorder(root)
         return res
-    
-    def reverseorder_traversal(self, root: Optional[TreeNode]) -> List[int]:
+
+    def dfs_reverseorder_traversal(self, root: Optional[TreeNode]) -> List[int]:
         """_Bonus_
 
-        We want to return the list in REVERSE ORDER ie last-to-first. This will be similar to the INORDER
+        DFS: We want to return the list in REVERSE ORDER ie last-to-first. This will be similar to the INORDER
         implementation. The only difference is that we run the run the right subtree before the left subtree
-        
+
         NOTE: INORDER, PREORDER, POSTORDER, REVERSEORDER are all DFS implementations
         """
         res = []
@@ -157,9 +162,11 @@ class BinarySearchTree:
         Optimal solution: Recursively, we call dfs on the left, increment the value of k by 1. If the new value equals k, we return the value of the node just added; otherwise we run dfs on the right and repeat the process
         """
         cnt = 0
-        res = root.val # type: ignore
+        res = root.val  # type: ignore
 
-        def dfs(node):
+        def dfs(
+            node,
+        ):  # Inorder DFS. Note that after calling dfs on the left, the node is ''accessed before calling it on the right subtree
             nonlocal cnt, res
             if not node:
                 return
@@ -179,7 +186,7 @@ class BinarySearchTree:
         _Neetcode_Medium_
         Also called LEVEL ORDER TRAVERSAL; Better implement with a QUEUE data structure
 
-        Given a binary tree root, return the level order traversal of it as a nested list, where each sublist contains the values of nodes at a particular level in the tree, from left to right.
+        Given a binary tree root, return the level order (bfs) traversal of it as a nested list, where each sublist contains the values of nodes at a particular level in the tree, from left to right.
         """
         res = []
 
@@ -191,7 +198,7 @@ class BinarySearchTree:
             level = []
             for i in range(q_length):
                 node = queue.popleft()
-                if node:
+                if node:  # This check is necessary because a a null node (leaf node) might have been added to the queue earlier
                     level.append(node.val)
                     queue.append(node.left)
                     queue.append(node.right)
@@ -199,3 +206,81 @@ class BinarySearchTree:
                 res.append(level)
 
         return res
+
+
+class ConsstructBinaryTree:
+    """_Neetcode_Medium_
+
+    You are given two integer arrays preorder and inorder.
+
+    preorder is the preorder traversal of a binary tree
+    inorder is the inorder traversal of the same tree
+    Both arrays are of the same size and consist of unique values.
+    Rebuild the binary tree from the preorder and inorder traversals and return its root.
+    """
+
+    def depth_first_search(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
+        """Uses dfs
+
+        Time Complexity: O(n**2)
+        Space Complexity: O(n)
+        """
+        if not preorder or not inorder:
+            return None
+
+        root = TreeNode(preorder[0])
+        mid = inorder.index(preorder[0])
+        # preorder[0] is the root, preorder[1:mid+1] used for the left subtree and preorder[mid+1:] used for the right subtree
+        root.left = self.depth_first_search(preorder[1 : mid + 1], inorder[:mid])
+        root.right = self.depth_first_search(
+            preorder[mid + 1 :], inorder[mid + 1 :]
+        )  # inorder[mid] has been used for the root
+        return root
+
+    def dfs_with_hashmap(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
+        """
+
+        Time Complexity: O(n)
+        Space Complexity: O(n)
+        """
+        indices = {val: idx for idx, val in enumerate(inorder)}
+
+        self.pre_idx = 0
+
+        def dfs(left, right):
+            if left > right:
+                return None
+
+            root_val = preorder[self.pre_idx]
+            self.pre_idx += 1
+            root = TreeNode(root_val)
+            mid = indices[root_val]
+            root.left = dfs(left, mid - 1)
+            root.right = dfs(mid + 1, right)
+            return root
+
+        return dfs(0, len(inorder) - 1)
+
+    def dfs_optimized(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
+        """_summary_
+
+        Time Complexity: O(n)
+        Space Complexity: O(n)
+        """
+        preIdx = inIdx = 0
+
+        def dfs(limit):
+            nonlocal preIdx, inIdx
+            if preIdx >= len(preorder):
+                return None
+            if inorder[inIdx] == limit:
+                inIdx += 1
+                return None
+
+            root = TreeNode(preorder[preIdx])
+            preIdx += 1
+            root.left = dfs(root.val)
+            root.right = dfs(limit)
+            return root
+
+        return dfs(float("inf"))
