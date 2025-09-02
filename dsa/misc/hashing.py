@@ -1,4 +1,29 @@
 from collections import OrderedDict
+from typing import List
+
+
+def hasDuplicate(self, nums: List[int]) -> bool:
+    dct = {}
+    for val in nums:
+        if val in dct:
+            return True
+            break
+        dct[val] = 1
+    return False
+
+    # Better alternative
+    # return len(nums) != len(set(nums))
+
+
+def twoSum(self, nums: List[int], target: int) -> List[int]:
+    prevMap = {}  # val -> index
+
+    for i, n in enumerate(nums):
+        diff = target - n
+        if diff in prevMap:
+            return [prevMap[diff], i]
+        prevMap[n] = i
+    return []
 
 
 class LRUCache:
@@ -19,3 +44,4 @@ class LRUCache:
 
         if len(self.cache) > self.cap:
             self.cache.popitem(last=False)
+

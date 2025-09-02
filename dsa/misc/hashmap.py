@@ -8,6 +8,9 @@ class Pair:
 
 
 class HashMap:
+    """
+    Insert, Remove and Search each has a time complexity of O(1), but Inorder traversing is O(nlogn)
+    """
     def __init__(self):
         self.size = 0
         self.capacity = 2
@@ -39,6 +42,7 @@ class HashMap:
                 if self.size >= self.capacity // 2:
                     self.rehash()
                 return
+            #if key is already at this index, we overwrite it
             elif self.map[index].key == key:  # type: ignore
                 self.map[index].val = val  # type: ignore
                 return
