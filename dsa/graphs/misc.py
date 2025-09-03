@@ -1,5 +1,5 @@
 # Matrix (2D Grid)
-from collections import deque
+from collections import defaultdict, deque
 from typing import Dict, List, Set
 
 
@@ -39,6 +39,11 @@ class Matrix:
         """_summary_
 
         Find the length of the shortest path from the top-left to the bottom-right
+
+        The idea in this implementation is not to get all the paths and find the shortest. It is to keep going; for the first path get to the end, stop and return that path-count. That will surely be the shortest path.
+        Does not use recursion or backtracking
+        Space Complexity: O(m*n)
+        Time Complexity: O(m*n)
         """
         ROWS, COLS = len(grid), len(grid[0])
         visited = set()
@@ -53,7 +58,7 @@ class Matrix:
                 if r == ROWS - 1 and c == COLS - 1:
                     return length
 
-                neighbors = [[0, 1], [0, -1], [1, 0], [-1, 0]]
+                neighbors = [[0, 1], [0, -1], [1, 0], [-1, 0]]  # Relative positions
                 for dr, dc in neighbors:
                     if (
                         min(r + dr, c + dc) < 0
@@ -84,7 +89,17 @@ class AdjacencyList:
             adj_list[src].append(dst)
         
         return adj_list
-    
+
+    def generate_adjacency_list2[T](self, edges: List[List[T]]) -> Dict[T, List[T]]:
+        """This function takes directed edges and build an adjacency list from it, using built in Python defaultdict~~"""
+        adj_list = defaultdict(list)
+        for src, dst in edges:
+            adj_list[src].append(dst)
+            if dst not in adj_list:
+                adj_list[dst] = []
+
+        return dict(adj_list)
+
     def count_unique_paths[T](self, node:T, target:T, adjList: Dict[T, List[T]], visit:Set[T])->int:
         if node in visit:
             return 0
@@ -101,9 +116,9 @@ class AdjacencyList:
     
     def shortest_path[T](self, node: T, target: T, adjList: Dict[T, List[T]])->int:
         length = 0
+        queue = deque()
         visit = set()
         visit.add(node)
-        queue = deque()
         queue.append(node)
 
         while queue:
@@ -139,3 +154,4 @@ mtrx = Matrix()
 print(">>>>>>>>>Shortest path", mtrx.shortest_path_length(grid))
 print(">>>>>>>>>Number of unique paths", mtrx.unique_path_count(grid, 0, 0, set()))
 print("YYYYY", AdjacencyList().generate_adjacency_list(GRID_EDGES))
+print("YYYYY2", AdjacencyList().generate_adjacency_list2(GRID_EDGES))
