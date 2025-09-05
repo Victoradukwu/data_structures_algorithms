@@ -1,6 +1,12 @@
 # Matrix (2D Grid)
 from collections import defaultdict, deque
-from typing import Dict, List, Set
+from typing import Dict, List, Optional, Set
+
+
+class Node:
+    def __init__(self, val=0, neighbors=None):
+        self.val = val
+        self.neighbors = neighbors if neighbors is not None else []
 
 
 class Matrix:
@@ -133,7 +139,74 @@ class AdjacencyList:
                         queue.append(neighbor)
             length += 1
         return length
-    
+
+
+def cloneGraph(node: Optional["Node"]) -> Optional["Node"]:
+    """_Neetcode_Medium_
+    Given a node in a connected undirected graph, return a `deep copy` of the graph.
+    Each node in the graph contains an integer value and a list of its neighbors.
+    The graph is shown in the test cases as an adjacency list. An adjacency list is a mapping of nodes to lists, used to represent a finite graph. Each list describes the set of neighbors of a node in the graph.
+    For simplicity, nodes values are numbered from `1` to `n`, where `n` is the total number of nodes in the graph. The index of each node within the adjacency list is the same as the node's value (1-indexed).
+    The input node will always be the first node in the graph and have `1` as the value.
+
+    Time Complexity: O(V+E)
+    Space Complexity: O(V)
+    """
+    if not node:
+        return None
+
+    oldToNew = {}
+    oldToNew[node] = Node(node.val)
+    q = deque([node])
+
+    while q:
+        cur = q.popleft()
+        for nei in cur.neighbors:
+            if nei not in oldToNew:
+                oldToNew[nei] = Node(nei.val)
+                q.append(nei)
+            oldToNew[cur].neighbors.append(oldToNew[nei])
+
+    return oldToNew[node]
+
+
+def canFinish(numCourses: int, prerequisites: List[List[int]]) -> bool:
+    """Neetcode_Medium_
+
+    You are given an array `prerequisites` where `prerequisites[i]` = `[a, b]` indicates that you must take course `b` first if you want to take course `a`.
+    The pair [0, 1], indicates that must take course 1 before taking course 0.
+    There are a total of `numCourses` courses you are required to take, labeled from 0 to `numCourses - 1`.
+    Return true if it is possible to finish all courses, otherwise return false.
+    """
+    # Generate Adjacency Matrix
+    preMap = {i: [] for i in range(numCourses)}
+    for crs, pre in prerequisites:
+        preMap[crs].append(pre)
+
+    # Store all courses along the current DFS path
+    visiting = set()
+
+    def dfs(crs):
+        if crs in visiting:
+            # Cycle detected
+            return False
+        if preMap[crs] == []:
+            return True
+
+        visiting.add(crs)
+        for pre in preMap[crs]:
+            if not dfs(pre):
+                return False
+        visiting.remove(crs)
+        preMap[crs] = []
+        return True
+
+    for c in range(numCourses):
+        if not dfs(c):
+            return False
+    return True
+
+
 EDGES = [["A", "B"], ["B", "C"], ["B", "E"], ["C", "E"], ["E", "D"]]
 grid = [
     [0, 0, 0, 0], 
