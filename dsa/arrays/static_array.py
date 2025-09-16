@@ -12,6 +12,8 @@ def removeDuplicates(nums: list[int]) -> int:
     It is not necessary to consider elements beyond the first k positions of the array.
     To be accepted, the first k elements of `nums` must contain all the unique elements.
     Return k as the final result.
+    
+    This implementation uses two pointers, 'land_unique_index' and 'r'
     """
     last_unique_index = 1
     for r in range(1, len(nums)):
@@ -24,7 +26,7 @@ def removeDuplicates(nums: list[int]) -> int:
 def removeElement(nums: List[int], val: int) -> int:
     """_Neetcode_Easy_
 
-    You are given an integer array `nums` and an integer val. Your task is to remove all occurrences of val from `nums` in-place.
+    You are given an integer array `nums` and an integer `val`. Your task is to remove all occurrences of val from `nums` in-place.
     After removing all occurrences of val, return the number of remaining elements, say k, such that the first k elements of `nums` do not contain val.
 
     Note:
