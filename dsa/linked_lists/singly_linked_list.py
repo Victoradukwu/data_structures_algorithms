@@ -11,7 +11,7 @@ class ListNode:
 class ReverseLinkedList:
     """_Neetcode_Easy_
 
-    Given the beginning of a singly linked list head, reverse the list, and return the new beginning of the list.
+    Given the head of a singly linked list, reverse the list, and return the new beginning of the list.
     """
     def reverse_list_iteration(self, head: ListNode) -> Optional[ListNode]:
         """_IterativeMethod_
@@ -76,17 +76,17 @@ def mergeTwoLists(list1: Optional[ListNode], list2: Optional[ListNode]) -> Optio
 
     Itereative approach
     """
-    dummy = node = ListNode()  # two references to the same empty list node
+    dummy = curr_node = ListNode()  # two references to the same empty list node
 
     while list1 and list2:  # the heads of list1 and list2 are both non-null
         if list1.val <= list2.val:
-            node.next = list1 #The list with the smalles head becomes starts the combined list
-            list1 = list1.next # The affwected list has its head updated
+            curr_node.next = list1 #The list with the smalles head becomes starts the combined list
+            list1 = list1.next # The affected list has its head updated
         else:
-            node.next = list2
+            curr_node.next = list2
             list2 = list2.next
-        node = node.next  # `dummy` still points to the empty ListNode, but `node` is now a different object
-    node.next = (
+        curr_node = curr_node.next  # `dummy` still points to the empty ListNode, but `node` is now a different object
+    curr_node.next = (
         list1 or list2
     )  # One of the lists is exhausetd, so, we append the remaining of the other list to the new one we are constructing
     return (

@@ -58,7 +58,7 @@ class MyLinkedList:
         new_node.next = self.left.next
         new_node.prev = self.left
         self.left.next = new_node
-        tmp.prev = new_node
+        tmp.prev = new_node # type: ignore
 
     def addAtTail(self, val: int) -> None:
         new_node = ListNode(val)
@@ -67,7 +67,8 @@ class MyLinkedList:
         new_node.prev = self.right.prev
 
         self.right.prev = new_node
-        tmp.next = new_node
+        if tmp:
+            tmp.next = new_node
 
     # def addAtIndex(self, index: int, val: int) -> None:
     #     new_node = ListNode(val)
@@ -94,7 +95,8 @@ class MyLinkedList:
             new_node.next = curr
             new_node.prev = curr.prev
             curr.prev = new_node
-            tmp.next = new_node
+            if tmp:
+                tmp.next = new_node
 
     # def deleteAtIndex(self, index: int) -> None:
     #     curr = self.left.next
@@ -113,8 +115,8 @@ class MyLinkedList:
             curr = curr.next
             curr_index += 1
         if curr and curr != self.right:
-            curr.prev.next = curr.next
-            curr.next.prev = curr.prev
+            curr.prev.next = curr.next # type: ignore
+            curr.next.prev = curr.prev # type: ignore
 
 
 class BrowserHistory:
