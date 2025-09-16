@@ -1,7 +1,7 @@
 from typing import List
 
 
-class Solution:
+class BitsManipulations:
     def hammingWeight(self, n: int) -> int:
         """_Leetcode_Easy_
 
