@@ -99,7 +99,7 @@ def firstBadVersion(self, n: int) -> int:
 
 
 def minEatingSpeed(self, piles: List[int], h: int) -> int:
-    """_Neetcode Midium_
+    """_Neetcode Medium_
 
     You are given an integer array piles where piles[i] is the number of bananas in the ith pile. You are also given an integer h, which represents the number of hours you have to eat all the bananas.
 
@@ -149,7 +149,7 @@ class Search2DMatrix:
     
     def staircase_search(self, matrix: List[List[int]], target: int) -> bool:
         """
-        Takes advantage of the fact that the matrix is sorted along both the rows and the columns. Similar to bunary sort for a 1-D array
+        Takes advantage of the fact that the matrix is sorted along both the rows and the columns. Similar to binary sort for a 1-D array
         Compare the target with the last element in the first row. If the element is greater than the
         target, remain on that row and check the lower column of that row. More efficient.
         
@@ -178,14 +178,14 @@ class Search2DMatrix:
         """
         ROWS, COLS = len(matrix), len(matrix[0])
 
-        l, r = 0, ROWS * COLS - 1
-        while l <= r:
-            mid = l + (r - l) // 2
+        left_pointer, right_pointer = 0, ROWS * COLS - 1
+        while left_pointer <= right_pointer:
+            mid = left_pointer + (right_pointer - left_pointer) // 2
             row, col = mid // COLS, mid % COLS
             if target > matrix[row][col]:
-                l = mid + 1
+                left_pointer = mid + 1
             elif target < matrix[row][col]:
-                r = mid - 1
+                right_pointer = mid - 1
             else:
                 return True
         return False

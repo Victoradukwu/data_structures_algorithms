@@ -1,4 +1,4 @@
-from typing import Any, List, Optional
+# from typing import Any, List, Optional
 
 int_lst = [5, 2, 9, 1, 5, 6]
 str_lst = ["banana", "date", "apple", "cherry", "Dated"]
@@ -21,7 +21,7 @@ def bubble_sort(arr):
             if arr[j]>arr[j+1]:
                 arr[j], arr[j+1] = arr[j+1], arr[j]
                 swapped = True
-        if not swapped:
+        if not swapped:  # The elements from i to the end are already sorted
             break
     return arr
 
