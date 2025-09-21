@@ -97,10 +97,11 @@ class TransitionManager:
         self.transitions.append(transition)
 
     def handle_event(self, current_state, event):
+        """Handle a sequence of transitions"""
         for transition in self.transitions:
-            current_state.handle_event(transition.event)
-            # if transition.from_state == current_state and transition.event == event:
-            #     return current_state.handle_event(transition.event)
+            # current_state.handle_event(transition.event)
+            if transition.from_state == current_state and transition.event == event:
+                return current_state.handle_event(transition.event)
         return current_state
     
     
