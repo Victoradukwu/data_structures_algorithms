@@ -208,7 +208,7 @@ class BinarySearchTree:
         return res
 
 
-class ConsstructBinaryTree:
+class ConstructBinaryTree:
     """_Neetcode_Medium_
 
     You are given two integer arrays preorder and inorder.

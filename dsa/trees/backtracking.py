@@ -35,7 +35,7 @@ class Backtracking:
             return False
         path.append(root.val)
 
-        if not root.left and not root.right:
+        if not root.left and not root.right:  # Base case: you are now at a leaf node
             return True
         if self.leaf_path(root.left, path):
             return True

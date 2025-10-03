@@ -40,7 +40,9 @@ class PriorityQueue:
         self.heap[1] = self.heap.pop()
         i = 1
         # Percolate down
-        while 2 * i < len(self.heap):
+        while (
+            2 * i < len(self.heap)
+        ):  # The last half of the list have no children, so, no need to check for a possible swap while percolating down
             if (
                 2 * i + 1 < len(self.heap)
                 and self.heap[2 * i + 1] < self.heap[2 * i]
@@ -60,7 +62,7 @@ class PriorityQueue:
         """
         Time Complexity: O(n)
         """
-        # 0-th position is moved to the end, so that the oth position can be ignored
+        # 0-th position is moved to the end, so that the 0th position can be ignored
         arr.append(arr[0])
 
         self.heap = arr
@@ -128,7 +130,7 @@ def lastStoneWeight(stones: List[int]) -> int:
     if len(stones) == 1:
         return stones[0]
 
-    heap = [-x for x in stones] # Create a max-heap, since a pop should return the largest element
+    heap = [-x for x in stones] # Create a max-heap, since a pop should return the largest element, 0-indexed
     heapq.heapify(heap)
 
     while len(heap) > 1:
@@ -158,7 +160,7 @@ def kClosest(points: List[List[int]], k: int) -> List[List[int]]:
 def findKthLargest(nums: List[int], k: int) -> int:
     """_Neetcode_Medium_
 
-    Given an unsorted array of integers nums and an integer k, return the kth largest element in the array.
+    Given an unsorted array of integers `nums` and an integer `k`, return the `kth` largest element in the array.
     By kth largest element, we mean the kth largest element in the sorted order, not the kth distinct element.
     """
     # return sorted(nums, reverse=True)[k - 1]. #An alternative implementation
