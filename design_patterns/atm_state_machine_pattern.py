@@ -1,5 +1,9 @@
 """Design an ATM using the State Machine Pattern"""
 
+from abc import ABC, abstractmethod
+from typing import Optional, Self
+
+
 class ATM:
     def __init__(self):
         self.state = "UNAUTHORIZED"
@@ -53,9 +57,95 @@ class ATM:
 if __name__ == "__main__":
     atm = ATM()
 
-    atm.handle_event("TRANSACT")             # Denied
-    atm.handle_event("AUTHENTICATE", "0000") # Wrong PIN
-    atm.handle_event("AUTHENTICATE", "1234") # Correct PIN
-    atm.handle_event("TRANSACT")             # Allowed
-    atm.handle_event("LOGOUT")               # Logged out
-    atm.handle_event("TRANSACT")             # Denied again
+    atm.handle_event("TRANSACT")  # Denied
+    atm.handle_event("AUTHENTICATE", "0000")  # Wrong PIN
+    atm.handle_event("AUTHENTICATE", "1234")  # Correct PIN
+    atm.handle_event("TRANSACT")  # Allowed
+    atm.handle_event("LOGOUT")  # Logged out
+    atm.handle_event("TRANSACT")  # Denied again
+
+
+"""
+Alternative Implementation, à là workflow_mgt_state_machine.py
+"""
+
+
+class Event(ABC):
+    def __init__(self, name):
+        self.name = name
+
+    def __eq__(self, other):
+        return self.name == other.name
+
+
+class EventAuthenticate(Event):
+    def __init__(self, pin):
+        super().__init__("authenticate")
+        self.pin = pin
+
+
+class EventTransact(Event):
+    def __init__(self):
+        super().__init__("transact")
+
+
+class EventLogout(Event):
+    def __init__(self):
+        super().__init__("logout")
+
+
+class State(ABC):
+    def __init__(self) -> None:
+        self.pin_code = "1234"
+
+    @abstractmethod
+    def handle_event(self, event: Event) -> Optional[Self]:
+        pass
+
+    def __eq__(self, other) -> bool:
+        return self.__class__ == other.__class__
+
+
+class UnAuthorizedState(State):
+    def handle_event(self, event: Event):
+        if isinstance(event, EventAuthenticate):
+            if event.pin == self.pin_code:
+                print("Authentication successful.")
+                return AuthorizedState()
+        else:
+            print("Your logged out. Log in to continue")
+
+
+class AuthorizedState(State):
+    def handle_event(self, event: Event) -> Optional[State]:
+        if isinstance(event, EventAuthenticate):
+            print("Already authorised.")
+        elif isinstance(event, EventTransact):
+            print("Transaction successful")
+        else:
+            print("Successfully logged out")
+            return UnAuthorizedState()
+
+
+class Transition:
+    """Base class for all types of Transitions"""
+
+    def __init__(self, event, from_state, to_state):
+        self.event = event
+        self.from_state = from_state
+        self.to_state = to_state
+
+
+class TransitionManager:
+    def __init__(self):
+        self.transitions = []
+
+    def add_transition(self, transition):
+        self.transitions.append(transition)
+
+    def handle_event(self, current_state, event):
+        """Handle a sequence of transitions"""
+        for transition in self.transitions:
+            if transition.from_state == current_state and transition.event == event:
+                return current_state.handle_event(transition.event)
+        return current_state
