@@ -1,4 +1,4 @@
-from typing import Self
+
 
 
 def isValid(self, s: str) -> bool:

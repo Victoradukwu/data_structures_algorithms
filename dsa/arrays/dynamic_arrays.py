@@ -11,8 +11,9 @@ def getConcatenation(self, nums: List[int]) -> List[int]:
     Return the array ans
     """
     nums_length = len(nums)
+    ans_length = 2 * nums_length
     last_idx = nums_length - 1
-    empty_arr = [0] * 2 * nums_length
-    for i in range(2 * nums_length):
-        empty_arr[i] = nums[i] if i <= last_idx else nums[i - nums_length]
-    return empty_arr
+    ans = [0] * ans_length
+    for i in range(ans_length):
+        ans[i] = nums[i] if i <= last_idx else nums[i - nums_length]
+    return ans
