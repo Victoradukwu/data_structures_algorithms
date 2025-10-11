@@ -34,7 +34,7 @@ class ReverseLinkedList:
         Time complexity: O(n)
         Space complexity: O(n)
         """
-        if not head:
+        if not head:  # Base case
             return None
 
         new_head = head
@@ -52,18 +52,19 @@ def mergeKLists(lists: List[Optional[ListNode]]) -> Optional[ListNode]:
     You are given an array of k linked-lists lists, each linked-list is sorted in ascending order.
     Merge all the linked-lists into one sorted linked-list and return it.
     """
-    nodes = []
+    node_values = []
     for lst in lists:
         while lst:
-            nodes.append(lst.val)
+            node_values.append(lst.val)
             lst = lst.next
-    nodes.sort()
+    node_values.sort()
 
     res = ListNode(0)
     cur = res
-    for node in nodes:
-        cur.next = ListNode(node)
-        cur = cur.next
+    for node_value in node_values:
+        node = ListNode(node_value)
+        cur.next = node
+        cur = node
     return res.next
 
 
@@ -76,19 +77,17 @@ def mergeTwoLists(list1: Optional[ListNode], list2: Optional[ListNode]) -> Optio
 
     Itereative approach
     """
-    dummy = curr_node = ListNode()  # two references to the same empty list node
-
-    while list1 and list2:  # the heads of list1 and list2 are both non-null
+    nd = ListNode()
+    dummy = nd
+    curr_node = nd
+    while list1 and list2:
         if list1.val <= list2.val:
-            curr_node.next = list1 #The list with the smalles head becomes starts the combined list
-            list1 = list1.next # The affected list has its head updated
+            curr_node.next = list1
+            list1 = list1.next
+            curr_node = curr_node.next
         else:
             curr_node.next = list2
             list2 = list2.next
-        curr_node = curr_node.next  # `dummy` still points to the empty ListNode, but `node` is now a different object
-    curr_node.next = (
-        list1 or list2
-    )  # One of the lists is exhausetd, so, we append the remaining of the other list to the new one we are constructing
-    return (
-        dummy.next
-    )  # dummy still references the empty ListNode, whose `next` is the first ListNode in the concatenated result
+            curr_node = curr_node.next
+    curr_node.next = list1 or list2
+    return dummy.next
