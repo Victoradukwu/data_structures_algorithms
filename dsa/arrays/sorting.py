@@ -119,8 +119,9 @@ def merge_sort(arr):
             else:
                 result.append(right_half[j])
                 j += 1
-        result.extend(left_half[i:])
-        result.extend(right_half[j:])
+        remainder = left_half[i:] or right_half[j:]
+        result.extend(remainder)
+        # result.extend(right_half[j:])
         
         return result 
     

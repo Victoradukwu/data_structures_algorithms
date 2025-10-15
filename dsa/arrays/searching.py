@@ -76,8 +76,6 @@ def firstBadVersion(self, n: int) -> int:
     Suppose you have n versions [1, 2, ..., n] and you want to find out the first bad one, which causes all the following ones to be bad.
 
     You are given an API bool isBadVersion(version) which returns whether version is bad. Implement a function to find the first bad version. You should minimize the number of calls to the API.
-
-
     """
 
     def isBadVersion(version):
@@ -101,7 +99,7 @@ def firstBadVersion(self, n: int) -> int:
 def minEatingSpeed(self, piles: List[int], h: int) -> int:
     """_Neetcode Medium_
 
-    You are given an integer array piles where piles[i] is the number of bananas in the ith pile. You are also given an integer h, which represents the number of hours you have to eat all the bananas.
+    You are given an integer array 'piles' where piles[i] is the number of bananas in the ith pile. You are also given an integer h, which represents the number of hours you have to eat all the bananas.
 
     You may decide your bananas-per-hour eating rate of k. Each hour, you may choose a pile of bananas and eat k bananas from that pile. If the pile has less than k bananas, you may finish eating the pile but you can not eat from another pile in the same hour.
 
@@ -116,7 +114,8 @@ def minEatingSpeed(self, piles: List[int], h: int) -> int:
         mid = (lowest + highest) // 2
         total_time = 0
         for p in piles:
-            total_time += math.ceil(p/mid)
+            time_taken = math.ceil(p / mid)
+            total_time += time_taken
 
         if total_time > h:
             lowest = mid + 1
@@ -188,4 +187,39 @@ class Search2DMatrix:
                 right_pointer = mid - 1
             else:
                 return True
+        return False
+
+    def double_binarysearch(self, matrix: List[List[int]], target: int) -> bool:
+        """This method considers the matrix as a set of sorted rows, each row containing a set of sorted values
+        We apply binary search to determine the row containg the search term, and then, apply binary search on the
+        candidate row to find the cell containg the search term
+
+        Time complexity: Olog(m * n)
+        Space complexity: O(1)
+        """
+
+        rows = len(matrix)
+        top_row, bottom_row = 0, rows - 1  # Top_row has lower index than bottom_row
+        while top_row <= bottom_row:
+            mid_row = (top_row + bottom_row) // 2
+            if target > matrix[mid_row][-1]:
+                top_row = mid_row + 1
+            elif target < matrix[mid_row][0]:
+                bottom_row = mid_row - 1
+            else:
+                break
+        if not (top_row <= bottom_row):
+            return False
+
+        row_id = (top_row + bottom_row) // 2
+        row = matrix[row_id]
+        left_col, right_col = 0, len(row) - 1
+        while left_col <= right_col:
+            mid_col = (left_col + right_col) // 2
+            if row[mid_col] == target:
+                return True
+            elif row[mid_col] > target:
+                right_col = mid_col - 1
+            else:
+                left_col = mid_col + 1
         return False
