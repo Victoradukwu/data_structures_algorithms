@@ -154,23 +154,24 @@ class BinarySearchTree:
 
         reverseorder(root)
         return res
-    
-    def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
+
+    def kthSmallest(self, root: Optional[TreeNode], k: int) -> Optional[int]:
         """_Neetcode_Medium_
 
         Given the root of a binary search tree, and an integer k, return the kth smallest value (1-indexed) in the tree.
         Optimal solution: Recursively, we call dfs on the left, increment the value of k by 1. If the new value equals k, we return the value of the node just added; otherwise we run dfs on the right and repeat the process
         """
-        cnt = 0
-        res = root.val  # type: ignore
 
-        def dfs(
-            node,
-        ):  # Inorder DFS. Note that after calling dfs on the left, the node is ''accessed before calling it on the right subtree
+        if not root:
+            return
+        cnt = 0
+        res = root.val
+
+        def dfs(node):
             nonlocal cnt, res
             if not node:
                 return
-
+            # Inorder DFS. Note that after calling dfs on the left, the node is ''accessed before calling it on the right subtree
             dfs(node.left)
             cnt += 1
             if cnt == k:
@@ -232,9 +233,8 @@ class ConstructBinaryTree:
         mid = inorder.index(preorder[0])
         # preorder[0] is the root, preorder[1:mid+1] used for the left subtree and preorder[mid+1:] used for the right subtree
         root.left = self.depth_first_search(preorder[1 : mid + 1], inorder[:mid])
-        root.right = self.depth_first_search(
-            preorder[mid + 1 :], inorder[mid + 1 :]
-        )  # inorder[mid] has been used for the root
+        root.right = self.depth_first_search(preorder[mid + 1 :], inorder[mid + 1 :])
+        # Note inorder[mid] has been used for the root; same for preorder[0]
         return root
 
     def dfs_with_hashmap(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
@@ -284,3 +284,32 @@ class ConstructBinaryTree:
             return root
 
         return dfs(float("inf"))
+
+
+class ConstructBinaryTree2:
+    """_Neetcode_Medium_
+
+    You are given two integer arrays postorder and inorder.
+
+    postorder is the postorder traversal of a binary tree
+    inorder is the inorder traversal of the same tree
+    Both arrays are of the same size and consist of unique values.
+    Rebuild the binary tree from the postorder and inorder traversals and return its root.
+    """
+
+    def depth_first_search(self, inorder: List[int], postorder: List[int]) -> Optional[TreeNode]:
+        inorderIdx = {v: i for i, v in enumerate(inorder)}
+        """Uses dfs
+
+        Time Complexity: O(n**2)
+        Space Complexity: O(n)
+        """
+        if not inorder:
+            return
+
+        root_val = postorder.pop()
+        root = TreeNode(val=root_val)
+        idx = inorderIdx[root_val]
+        root.right = self.depth_first_search(inorder[idx + 1 :], postorder)
+        root.left = self.depth_first_search(inorder[:idx], postorder)
+        return root
