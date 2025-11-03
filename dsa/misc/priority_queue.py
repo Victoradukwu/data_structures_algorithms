@@ -16,9 +16,8 @@ class PriorityQueue:
         
     def push(self, val):
         self.heap.append(val)
-        i = (
-            len(self.heap) - 1
-        )  # i is the index of the recently added value. This assumes that the first item in the array is at index 1, with a 0 at index 0
+        # i is the index of the recently added value. The first item in the array is at index 1, with a 0 at index 0
+        i = len(self.heap) - 1
 
         # Percolate up
         while i > 1 and self.heap[i] < self.heap[i // 2]:
@@ -34,15 +33,15 @@ class PriorityQueue:
         if len(self.heap) == 2:
             return self.heap.pop()
 
-        res = self.heap[1]  # save the return value, csince we're going to overwrite it soon
+        res = self.heap[1]  # save the return value, since we're going to overwrite it soon
 
         # Move last value to root. This is to allow us percolate down, since percolate down is more efficient than percolate up
         self.heap[1] = self.heap.pop()
         i = 1
+
         # Percolate down
-        while (
-            2 * i < len(self.heap)
-        ):  # The last half of the list have no children, so, no need to check for a possible swap while percolating down
+        # The last half of the list have no children, so, no need to check for a possible swap while percolating down
+        while 2 * i < len(self.heap):
             if (
                 2 * i + 1 < len(self.heap)
                 and self.heap[2 * i + 1] < self.heap[2 * i]
@@ -69,7 +68,7 @@ class PriorityQueue:
         # The last half of the list have no children, so, no need to check for a possible swap. The check (percolate down) is only done for the first half of the list
         cur = (len(self.heap) - 1) // 2
         while cur > 0:  # Real data starts from index 1, not index 0
-            # Percolate down
+            # Percolate down, for each node between 1 and curr inclusive
             i = cur
             while 2 * i < len(self.heap):
                 if (
