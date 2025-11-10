@@ -10,13 +10,19 @@ class Fibonacci:
 
     def recursion_memoized(self, n: int) -> int:
         """Still recursion but uses memoization to speed up the process. Also called Top-down dynamic programming"""
-        if n <= 1:
-            return n
         cache = {}
-        if n in cache:
-            return cache[n]
-        cache[n] = self.recursion_memoized(n - 1) + self.recursion_memoized(n - 2)
-        return cache[n]
+
+        # Defining a helper function enables us keep the cache outside the recursive function, ensuring that the cache
+        # is not reinitialized on each recursive call
+        def helper(i):
+            if i <= 1:
+                return i
+            if i not in cache:
+                print(f"No hit for {i}")  # Check that memoization actually works
+                cache[i] = helper(i - 1) + helper(i - 2)
+            return cache[i]
+
+        return helper(n)
 
     def fibonacci_dp(self, n: int) -> int:
         """Uses bottom-up dynamic programming. Most efficient solution
@@ -39,38 +45,39 @@ class UniquePaths:
     We can only move to the right and downwards in the grid. We cannot move left or upwards
     """
 
-    def recursive_brute(self, rows, cols, r=0, c=0):
+    def recursive_brute(self, rows, cols):
         """Using Brute force
 
         Time Complexity: O(2**(m+n))
         Space Complexity: O(2**(m+n))
         """
-        if r == rows or c == cols:
-            return 0
-        if r == rows - 1 and c == cols - 1:
-            return 1
 
-        return self.recursive_brute(rows, cols, r + 1, c) + self.recursive_brute(rows, cols, r, c + 1)
+        def dfs(r, c):
+            """The number of ways of getting to cell (r,c)"""
+            if r < 0 or c < 0 or r >= rows or c >= cols:
+                return 0
+            return dfs(r, c - 1) + dfs(r - 1, c)
 
-    def recursive_memoized_brute(self, rows, cols, r=0, c=0):
+        return dfs(rows - 1, cols - 1)
+
+    def recursive_memoized(self, rows, cols, r=0, c=0):
         """Using Memoized Brute force; aka Top-down dynamic programming
 
         Time Complexity: O(m*n)
         Space Complexity: O(m*n)
         """
-        if r == rows or c == cols:
-            return 0
-        if r == rows - 1 and c == cols - 1:
-            return 1
 
-        cache = [[0] * cols for row in range(rows)]
-        if cache[r][c] > 0:
-            return cache[r][c]
+        cache = {(0, 0): 1}
 
-        cache[r][c] = self.recursive_memoized_brute(rows, cols, r + 1, c) + self.recursive_memoized_brute(
-            rows, cols, r, c + 1
-        )
-        return cache[r][c]
+        def dfs(r, c):
+            """The number of ways of getting to cell (r,c)"""
+            if r < 0 or c < 0 or r >= rows or c >= cols:
+                return 0
+            if (r, c) not in cache:
+                cache[(r, c)] = dfs(r, c - 1) + dfs(r - 1, c)
+            return cache[(r, c)]
+
+        return dfs(rows - 1, cols - 1)
 
     def paths_dp(self, rows, cols):
         """Implemented with Dynamic Programming; aka Bottom-up dynamic programming; the true DP approach
@@ -81,22 +88,24 @@ class UniquePaths:
 
         prev_row = [0] * cols  # Implicitly creating a row of all 0's after the matrix last row
 
-        for _ in range(
-            rows - 1, -1, -1
-        ):  # Technically equivalent to range(rows), but written this way to reflect the fact that we start from last row to the first row
-            cur_row = [0] * cols # a single row of zeros
-            cur_row[cols - 1] = 1 # Set the bottom-right to 1
+        # Technically equivalent to range(rows), but written this way to reflect the fact that we start from last row to the first row
+        for _ in range(rows):
+            cur_row = [0] * cols  # a single row of zeros
+            cur_row[cols - 1] = 1  # Set the bottom-right to 1
             for c in range(cols - 2, -1, -1):
                 cur_row[c] = cur_row[c + 1] + prev_row[c]
             prev_row = cur_row
         return prev_row[0]
-
 
 class ClimbingStairs:
     """_Neetcode_Easy_
 
     You are climbing a staircase. It takes n steps to reach the top.
     Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+
+    The simple solution here is that this is actually a FIBONACCI sequence, a la Greg Hogg, with f(n) = n if n < 3
+    The number of ways of getting to the 10th stair equals the number of ways of getting to the 9th
+    plus number of ways of getting to 8th
     """
 
     def vanillaRecursion(self, n: int) -> int:
@@ -107,31 +116,24 @@ class ClimbingStairs:
         Space complexity: O(n)
         """
 
-        def dfs(i):
-            """Depth first search"""
-            if i >= n:
-                return i == n  # if i == n, return 1, otherwise return 0
-            res = dfs(i + 1) + dfs(i + 2)
-            return res
+        if n < 3:
+            return n
+        return self.vanillaRecursion(n - 1) + self.vanillaRecursion(n - 2)
 
-        return dfs(0)
-
-    def memoizedRecursion(self, n: int) -> int:
+    def memoizedRecursion(self, n: int, cache={}) -> int:
         """Uses recursion with memoization, aka top-down dynamic programming. An improvement over the vanilla recursion
 
         Time complexit: O(n)
         Space complexity: O(n)
         """
-        cache = [-1] * n
 
-        def dfs(i):
-            if i >= n:
-                return i == n  # if i == n, return 1, otherwise return 0
-            if cache[i] == -1:
-                cache[i] = dfs(i + 1) + dfs(i + 2)
-            return cache[i]
+        if n < 3:
+            return n
 
-        return dfs(0)
+        if n not in cache:
+            cache[n] = self.memoizedRecursion(n - 1) + self.memoizedRecursion(n - 2)
+
+        return cache[n]
 
     def dynamic_programming(self, n: int) -> int:
         """Use Bottom-up dynamic programming, aka True DP.
@@ -154,53 +156,64 @@ class ClimbingStairs:
         Time complexit: O(n)
         Space complexity: O(1)
         """
-        one, two = 1, 1
+        second_last, last = 1, 2
 
-        for _ in range(n - 1):
-            one, two = one + two, one
-
-        return one
+        for _ in range(3, n + 1):
+            second_last, last = last, second_last + last
+        return last
 
 
 class HouseRobber:
     """You are given an integer array `nums` where nums[i] represents the amount of money the ith house has. The houses are arranged in a straight line, i.e. the ith house is the neighbor of the (i-1)th and (i+1)th house.
 
     You are planning to rob money from the houses, but you cannot rob two adjacent houses because the security system will automatically alert the police if two adjacent houses were both broken into.
-
     Return the maximum amount of money you can rob without alerting the police.
+
+    The guide here is that, at any given point, you have to pick the max of two options:
+    1. rob the current house and add it to the max obtainable in two houses back
+    2. skip robbing current house and take the max obtainable in the last house
     """
 
     def vanilla_recursion(self, nums: List[int]) -> int:
         """
-        Time Complexity: O(2**n)
+        Time Complexity: O(2**n); Not efficient
         Space Complexity: O(n)
         """
 
+        n = len(nums)
         def dfs(i):
-            if i >= len(nums):
-                return 0
-            return max(dfs(i + 1), nums[i] + dfs(i + 2))
+            if i == 0:
+                return nums[0]
+            if i == 1:
+                return max(nums[0], nums[1])
+            return max(dfs(i - 1), nums[i] + dfs(i - 2))
 
-        return dfs(0)
+        return dfs(n - 1)
 
     def memoized_recursion(self, nums: List[int]) -> int:
         """
+        Top-down dp
         Time Complexity: O(n)
         Space Complexity: O(n)
         """
-        cache = [-1] * len(nums)
+        n = len(nums)
+        if n == 1:
+            return nums[0]
+        if n == 2:
+            return max(nums[0], nums[1])
+
+        cache = {0: nums[0], 1: max(nums[0], nums[1])}
 
         def dfs(i):
-            if i >= len(nums):
-                return 0
-            if cache[i] != -1:
-                cache[i] = max(dfs(i + 1), nums[i] + dfs(i + 2))
+            if i not in cache:
+                cache[i] = max(dfs(i - 1), nums[i] + dfs(i - 2))
             return cache[i]
 
-        return dfs(0)
+        return dfs(n - 1)
 
     def dp_regular(self, nums: List[int]) -> int:
         """
+        Bottom-up dp
         Time Complexity: O(n)
         Space Complexity: O(n)
         """
@@ -224,13 +237,21 @@ class HouseRobber:
         Time Complexity: O(n)
         Space Complexity: O(1)
         """
-        rob1, rob2 = 0, 0
+        nums_length = len(nums)
 
-        for num in nums:
-            temp = max(num + rob1, rob2)
-            rob1 = rob2
-            rob2 = temp
-        return rob2
+        if nums_length == 0:
+            return 0
+        if nums_length == 1:
+            return nums[0]
+        if nums_length == 2:
+            return max(nums[0], nums[1])
+
+        prev = nums[0]
+        curr = max(nums[0], nums[1])
+        for i in range(2, nums_length):
+            curr, prev = max(nums[i] + prev, curr), curr
+
+        return curr
 
 
 class UniquePaths2:
@@ -293,11 +314,11 @@ class UniquePaths2:
 
 
 n = 10
-fb = Fibonacci()
-print("fib_memoized:", fb.recursion_memoized(n))
-print("fib_dp:", fb.fibonacci_dp(n))
+# fb = Fibonacci()
+# print("fib_memoized:", fb.recursion_memoized(n))
+# print("fib_dp:", fb.fibonacci_dp(n))
 
 unq = UniquePaths()
 print("^^^^^^^", unq.recursive_brute(4, 4))
-print("^^^^^^^", unq.recursive_memoized_brute(4, 4))
+print("^^^^^^^", unq.recursive_memoized(4, 4))
 print("^^^^^^^", unq.paths_dp(4, 4))
