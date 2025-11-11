@@ -16,9 +16,8 @@ class BitsManipulations:
 
         count = 0
         while n > 0:
-            if n & 1: # If bitwise AND between n and 1 returns 1
-                count += 1
-            n = n >> 1 # same as n // 2
+            count += 1
+            n = n & (n - 1)
         return count
 
     def countBits(self, n: int) -> List[int]:
@@ -31,9 +30,8 @@ class BitsManipulations:
         for i in range(n + 1):
             count = 0
             while i > 0:
-                if i & 1:
-                    count += 1
-                i = i >> 1
+                count += 1
+                i = i & (i - 1)
             count_list.append(count)
         return count_list
 
