@@ -5,9 +5,11 @@ https://medium.com/@amirm.lavasani/design-patterns-in-python-state-8916b2f65f69
 """
 
 from abc import ABC, abstractmethod
+from enum import StrEnum
 from typing import Optional, Self
 
-from design_patterns.work_flow_mgt_state_machine import current_state
+# from design_patterns.checkout_state import ShippingInfoEnteredState
+from design_patterns.workflow_mgt_state_machine import current_state
 
 
 class CheckoutState(ABC):
@@ -27,10 +29,7 @@ class CheckoutState(ABC):
     def process_payment(self) -> Optional[Self]:
         pass
 
-        """_summary_
 
-        Below is an alternative implementation
-        """
 class EmptyCartState(CheckoutState):
     def add_item(self, item) -> CheckoutState:
         print("f{item} added to the cart.")
@@ -48,7 +47,7 @@ class EmptyCartState(CheckoutState):
 
 class ItemAddedState(CheckoutState):
     def add_item(self, item):
-        print("Item added to the cart.")
+        print(f"{item} added to the cart.")
 
     def review_cart(self):
         print("Reviewing cart contents.")
@@ -117,42 +116,50 @@ if __name__ == "__main__":
     cart.review_cart()
     cart.enter_shipping_info("123 Main St, City")
     cart.process_payment()
-    
-    
-    
-    
+
+    """Below is an alternative implementation"""
+
+
+class StateEnum(StrEnum):
+    EMPTY_CART = "EMPTY_CART"
+    ITEM_ADDED = "ITEM_ADDED"
+    CART_REVIEWD = "CART_REVIEWD"
+    SHIPPING_INFO_ENTERED = "SHIPPING_INFO_ENTERED"
+    PAYMENT_PROCESSED = "PAYMENT_PROCESSED"
+
+
 class ShoppingCart:
     def __init__(self):
-        self.current_state = EmptyCartState()
+        self.current_state = StateEnum.EMPTY_CART
         self.cart = []
-        
-        # transition table
+
+        # transition table; mapping events to their respective handlers for each state
         self.transitions = {
-            "EMPTY_CART": {
+            StateEnum.EMPTY_CART: {
                 "ADD_ITEM": self.add_item,
                 "REVIEW_CART": self.cannot_review_empty_cart,
                 "SHIPPING_INFO": self.cannot_add_shipping_info,
                 "PROCESS_PAYMENT": self.cannot_process_payment,
             },
-            "ITEM_ADDED": {
+            StateEnum.ITEM_ADDED: {
                 "ADD_ITEM": self.item_alread_already_added,
                 "REVIEW_CART": self.review_cart,
                 "SHIPPING_INFO": self.cannot_add_shipping_info,
                 "PROCESS_PAYMENT": self.cannot_process_payment,
             },
-            "CART_REVIEWD": {
+            StateEnum.CART_REVIEWD: {
                 "ADD_ITEM": self.item_alread_already_added,
                 "REVIEW_CART": self.cart_already_reviewed,
                 "SHIPPING_INFO": self.cannot_add_shipping_info,
                 "PROCESS_PAYMENT": self.cannot_process_payment,
             },
-            "SHIPPING_INFO_ENTERED": {
+            StateEnum.SHIPPING_INFO_ENTERED: {
                 "ADD_ITEM": self.item_alread_already_added,
                 "REVIEW_CART": self.cart_already_reviewed,
                 "SHIPPING_INFO": self.shipping_info_already_added,
                 "PROCESS_PAYMENT": self.process_payment,
             },
-            "PEYMENT_PROCESSED": {
+            StateEnum.PAYMENT_PROCESSED: {
                 "ADD_ITEM": self.item_alread_already_added,
                 "REVIEW_CART": self.cart_already_reviewed,
                 "SHIPPING_INFO": self.shipping_info_already_added,
@@ -166,6 +173,7 @@ class ShoppingCart:
     
     def add_item(self, item):
         self.cart.append(item)
+        self.current_state = StateEnum.ITEM_ADDED
         print(f'{item} added to the cart')
     
     def item_alread_already_added(self, item):
@@ -173,9 +181,11 @@ class ShoppingCart:
     
     def cannot_review_empty_cart(self):
         print("Cannot review an empty cart")
+        self.current_state = StateEnum.ITEM_ADDED
     
     def review_cart(self):
         print("Cart content is being reviewed")
+        self.current_state = StateEnum.CART_REVIEWD
     
     def cart_already_reviewed(self):
         print("Cart content is already reviewed")
@@ -185,6 +195,7 @@ class ShoppingCart:
     
     def enter_shipping_info(self, info):
         print('Shippinf info is being added')
+        self.current_state = StateEnum.SHIPPING_INFO_ENTERED
     
     def shipping_info_already_added(self):
         print("Shippinf info is already added")
@@ -194,6 +205,7 @@ class ShoppingCart:
     
     def process_payment(self):
         print("Payment is being processed")
+        self.current_state = StateEnum.PAYMENT_PROCESSED
     
     def payment_already_processed(self):
         print("Payment is alread processed")
