@@ -4,7 +4,7 @@ from typing import List
 def removeDuplicates(nums: list[int]) -> int:
     """_Neetcode_
 
-    You are given an integer array nums sorted in non-decreasing order. Your task is to remove duplicates from nums in-place so that each element appears only once.
+    You are given an integer array `nums` sorted in non-decreasing order. Your task is to remove duplicates from nums in-place so that each element appears only once.
     After removing the duplicates, return the number of unique elements, denoted as k, such that the first k elements of nums contain the unique elements.
 
     Note:
@@ -27,7 +27,7 @@ def removeDuplicatesII(nums: list[int]) -> int:
     """_Leetcode_Medium
 
     Given an integer array nums sorted in non-decreasing order, remove some duplicates in-place such that each unique element appears at most twice. The relative order of the elements should be kept the same.
-    Since it is impossible to change the length of the array in some languages, you must instead have the result be placed in the first part of the array nums. More formally, if there are k elements after removing the duplicates, then the first k elements of nums should hold the final result. It does not matter what you leave beyond the first k elements.
+    Since it is impossible to change the length of the array in some languages, you must instead have the result be placed in the first part of the array `nums`. More formally, if there are k elements after removing the duplicates, then the first k elements of nums should hold the final result. It does not matter what you leave beyond the first k elements.
     Return k after placing the final result in the first k slots of nums.
     Do not allocate extra space for another array. You must do this by modifying the input array in-place with O(1) extra memory.
 
@@ -38,10 +38,10 @@ def removeDuplicatesII(nums: list[int]) -> int:
 
     while right < n:
         count = 1
-        while right + 1 < n and nums[right] == nums[right + 1]:
+        while right + 1 < n and nums[right] == nums[right + 1]:  # taking the number of occurences of an item
             right += 1
             count += 1
-        for _ in range(min(2, count)):
+        for _ in range(min(2, count)):  # If the item has more than two occurences, taking only two, else take all
             nums[left] = nums[right]
             left += 1
         right += 1
@@ -72,7 +72,7 @@ def removeElement(nums: List[int], val: int) -> int:
 def removeElement2(nums: list[int], val: int) -> int:
     """_Neetcode_Easy_
 
-    A better implementation of `removeElement`, using two pointers, `k` and `l`
+    A better implementation of `removeElement`, using two pointers, `k` and `i`
     Time complexity: O(n)
     Space complexity: O(1)
     """

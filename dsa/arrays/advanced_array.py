@@ -31,9 +31,9 @@ class MaximumSumSubArray:
         """
         max_sum = nums[0]
         curr_sum = 0
-        for i in nums:
-            curr_sum = max(max_sum, 0)
-            curr_sum += 0
+        for num in nums:
+            curr_sum = max(max_sum, 0)  # Discard sums less than zero
+            curr_sum += num
             max_sum = max(max_sum, curr_sum)
         return max_sum
     
@@ -55,8 +55,8 @@ class MaximumSumCircularSubArray:
 
         for i in range(n):
             cur_sum = 0
-            for j in range(i, i + n):
-                cur_sum += nums[j % n]
+            for j in range(i, i + n):  # i +n causes the iteration to cycle and stop at position just before i
+                cur_sum += nums[j % n]  # modulus ensures that the effective index is within the range of the array
                 max_sum = max(max_sum, cur_sum)
 
         return max_sum
@@ -84,7 +84,7 @@ class MaximumSumCircularSubArray:
 class LongestTurbulentSubarray:
     """Neetcode_Medium
 
-    You are given an integer array arr, return the length of a maximum size turbulent subarray of arr.
+    You are given an integer array `arr`, return the length of a maximum size turbulent subarray of arr.
     A subarray is turbulent if the comparison sign flips between each adjacent pair of elements in the subarray.
     More formally, a subarray [arr[i], arr[i + 1], ..., arr[j]] of arr is said to be turbulent if and only if:
 
@@ -104,23 +104,24 @@ class LongestTurbulentSubarray:
         
         GREATER_THAN, LESS_THAN, EQUAL_TO = 1, 0, -1
         n = len(arr)
-        result = cnt = 0
-        
-        sign = EQUAL_TO # the relationship btw (i-1)th item and the ith item 
-        for i in range(n - 1):
+        global_count = 0
+        curr_count = 0
+
+        sign = EQUAL_TO  # the relationship btw (i-1)th item and the ith item
+        for i in range(n - 1):  # iteration stops at send to the last item, since the last item does not have i + 1
             if arr[i] > arr[i + 1]:
-                cnt = cnt + 1 if sign == LESS_THAN else 1
+                curr_count = curr_count + 1 if sign == LESS_THAN else 1
                 sign = GREATER_THAN
             elif arr[i] < arr[i + 1]:
-                cnt = cnt + 1 if sign == GREATER_THAN else 1
+                curr_count = curr_count + 1 if sign == GREATER_THAN else 1
                 sign = LESS_THAN
-            else: # Reset
-                cnt = 0
+            else:  # Reset
+                curr_count = 0
                 sign = EQUAL_TO
 
-            result = max(result, cnt)
+            global_count = max(global_count, curr_count)
 
-        return result + 1
+        return global_count + 1
     
     def sliding_window(self, arr: list[int]) -> int:
         """
@@ -146,7 +147,7 @@ class LongestTurbulentSubarray:
         return res
         
 
-class NearbyDuplicares:
+class ContainsNearbyDuplicates:
     """_Neetcode_medium_
 
     You are given an integer array nums and an integer k, return true if there are two distinct indices i and j in the array such that nums[i] == nums[j] and abs(i - j) <= k, otherwise return false.
@@ -169,8 +170,8 @@ class NearbyDuplicares:
     def hashmap(self, nums:list[int], k:int)->bool:
         """_Using Hashmap to add memoization to the brute force above
 
-        Time Complexity: O(n*min(n, k))
-        Space Complexity: O(1)
+        Time Complexity: O(n)
+        Space Complexity: O(n)
         """
         cache = {} #Mapping values to their indexes
         for idx, val in enumerate(nums):
@@ -182,8 +183,8 @@ class NearbyDuplicares:
     def hashset(self, nums: list[int], k: int) -> bool:
         """_Using Hashset to add memoization to the brute force above
 
-        Time Complexity: O(n*min(n, k))
-        Space Complexity: O(1)
+        Time Complexity: O(n)
+        Space Complexity: O(min(n, k))
         """
         cache = set()
         L = 0

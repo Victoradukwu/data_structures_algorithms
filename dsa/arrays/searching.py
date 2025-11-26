@@ -1,10 +1,10 @@
-from typing import Any, List
+from typing import Any
 
 array = [2, 3, 5, 7, 9]
 array2 = [-1, 0, 3, 5, 9, 12]
 
 
-def linear_search(arr: List[Any], search_term:Any)->int:
+def linear_search(arr: list[Any], search_term:Any)->int:
     """Time complexity of O(n)"""
     for i in range(len(arr)):
         if arr[i] == search_term:
@@ -12,7 +12,7 @@ def linear_search(arr: List[Any], search_term:Any)->int:
     return -1
 
 
-def binary_search(arr: List[Any], search_term: Any)->int:
+def binary_search(arr: list[Any], search_term: Any)->int:
     """
     Time complexity of O(logn) but requires that the the array is already sorted
     So the effective time complexity is the that of the sorting algorithm
@@ -96,7 +96,7 @@ def firstBadVersion(self, n: int) -> int:
     return -1
 
 
-def minEatingSpeed(self, piles: List[int], h: int) -> int:
+def minEatingSpeed(self, piles: list[int], h: int) -> int:
     """_Neetcode Medium_
 
     You are given an integer array 'piles' where piles[i] is the number of bananas in the ith pile. You are also given an integer h, which represents the number of hours you have to eat all the bananas.
@@ -128,12 +128,12 @@ def minEatingSpeed(self, piles: List[int], h: int) -> int:
 class Search2DMatrix:
     """_Neetcode_Medium_
 
-    You are given an m x n 2-D integer array matrix and an integer target.
+    You are given an m x n 2-D integer array `matrix` and an integer `target`.
     Each row in matrix is sorted in non-decreasing order.
     The first integer of every row is greater than the last integer of the previous row.
     Return true if target exists within matrix or false otherwise.
     """
-    def brute_force(self, matrix: List[List[int]], target: int) -> bool:
+    def brute_force(self, matrix: list[list[int]], target: int) -> bool:
         """
         Compare each element with the target. Not very efficient
         Time Complexity: O(m*n)
@@ -146,7 +146,7 @@ class Search2DMatrix:
                     return True
         return False
     
-    def staircase_search(self, matrix: List[List[int]], target: int) -> bool:
+    def staircase_search(self, matrix: list[list[int]], target: int) -> bool:
         """
         Takes advantage of the fact that the matrix is sorted along both the rows and the columns. Similar to binary sort for a 1-D array
         Compare the target with the last element in the first row. If the element is greater than the
@@ -167,19 +167,19 @@ class Search2DMatrix:
                 return True
         return False
     
-    def binary_search(self, matrix: List[List[int]], target: int) -> bool:
+    def binary_search(self, matrix: list[list[int]], target: int) -> bool:
         """
         Takes advantage of the fact that the matrix is sorted along both the rows and the columns. Considers the entire
         matrix as a `flattened 1-D array` and applies the true binary search. Even more efficient
 
-        Time complexity: Olog(m * n)
+        Time complexity: O(log(m * n))
         Space complexity: O(1)
         """
         ROWS, COLS = len(matrix), len(matrix[0])
 
         left_pointer, right_pointer = 0, ROWS * COLS - 1
         while left_pointer <= right_pointer:
-            mid = left_pointer + (right_pointer - left_pointer) // 2
+            mid = (right_pointer + left_pointer) // 2
             row, col = mid // COLS, mid % COLS
             if target > matrix[row][col]:
                 left_pointer = mid + 1
@@ -189,12 +189,12 @@ class Search2DMatrix:
                 return True
         return False
 
-    def double_binarysearch(self, matrix: List[List[int]], target: int) -> bool:
+    def double_binarysearch(self, matrix: list[list[int]], target: int) -> bool:
         """This method considers the matrix as a set of sorted rows, each row containing a set of sorted values
         We apply binary search to determine the row containg the search term, and then, apply binary search on the
         candidate row to find the cell containg the search term
 
-        Time complexity: Olog(m * n)
+        Time complexity: O(log(m * n))
         Space complexity: O(1)
         """
 
