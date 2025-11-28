@@ -307,6 +307,23 @@ def canFinish(numCourses: int, prerequisites: List[List[int]]) -> bool:
     return True
 
 
+def island_perimeter(grid: list[list[int]]) -> int:
+    m = len(grid)
+    n = len(grid[0])
+    perimeter = 0
+
+    for i in range(m):
+        for j in range(n):
+            if grid[i][j] == 1:
+                perimeter += 4
+                for diff in [(-1, 0), (0, 1), (1, 0), (0, -1)]:
+                    r = i + diff[0]
+                    c = j + diff[1]
+                    if 0 <= r < m and 0 <= c < n and grid[r][c] == 1:
+                        perimeter -= 1
+    return perimeter
+
+
 EDGES = [["A", "B"], ["B", "C"], ["B", "E"], ["C", "E"], ["E", "D"]]
 grid = [
     [0, 0, 0, 0], 
