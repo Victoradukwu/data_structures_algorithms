@@ -82,3 +82,73 @@ def removeElement2(nums: list[int], val: int) -> int:
             nums[k] = nums[i]
             k += 1
     return k
+
+
+def max_stock_profit(prices: list[int]) -> int:
+    """Leetcode
+
+    You are given an array `prices` where prices[i] is the price of a given stock on ith day. You want to maximize your profit by choosing a single day to buy your stock and choosing a different day in the future to sell your stock
+
+    Noob dev solution
+    """
+    max_profit = 0
+    n = len(prices)
+
+    for i in range(n):
+        for j in range(i + 1, n):
+            profit = prices[j] - prices[i]
+            max_profit = max(max_profit, profit)
+
+    return max_profit
+
+
+def max_stock_profit2(prices: list[int]) -> int:
+    """Leetcode
+
+    You are given an array `prices` where prices[i] is the price of a given stock on ith day. You want to maximize your profit by choosing a single day to buy your stock and choosing a different day in the future to sell your stock
+
+    Optimal solution
+    """
+    min_price = prices[0]
+    max_profit = 0
+
+    for price in prices:
+        min_price = min(min_price, price)
+        profit = price - min_price
+        max_profit = max(max_profit, profit)
+
+    return max_profit
+
+
+def is_anagram(s: str, t: str) -> bool:
+    """_Leetcode_
+
+    Given two strings s and t, return true if t is an anagram of s, and false otherwise.
+    """
+    from collections import Counter
+
+    if len(s) != len(t):
+        return False
+
+    s_dict = Counter(s)
+    t_dict = Counter(t)
+
+    return s_dict == t_dict
+
+
+def group_anagrams(strs: list[str]) -> list[list[str]]:
+    """_Leetcode_
+
+    Given an array of strings strs, group the anagrams together. You can return the answer in any order.
+    """
+    from collections import defaultdict
+
+    dct = defaultdict(list)
+    for s in strs:
+        count = [0] * 26
+        for c in s:
+            count[ord(c) - ord("a")] += 1
+        key = tuple(count)
+        dct[key].append(s)
+
+    return list(dct.values())
